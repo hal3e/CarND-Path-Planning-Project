@@ -367,7 +367,12 @@ void PathPlanner::decideNewState(vector<vector<double> >& sensor_fusion_)
       double dist_sf = sf_s - s_;
       double dist_sf_d_abs = abs(possible_d - sf_d);
 
-      if(available_states[a] != "KL" && dist_sf < 15 && dist_sf > -5 && dist_sf_d_abs < 1.0) // If we want to change lanes and there is a vehicle blocking that lane then don't allow that motion
+      double dist_sf_limit = 15;
+
+      if(available_states[a] == "DLCL" || available_states[a] == "DLCR")
+        dist_sf_limit = 35;
+
+      if(available_states[a] != "KL" && dist_sf < dist_sf_limit && dist_sf > -5 && dist_sf_d_abs < 1.0) // If we want to change lanes and there is a vehicle blocking that lane then don't allow that motion
       {
         // cout<<" NA - "<<available_states[a]<<" s: "<< dist_sf <<endl;
         can_reach_this_state = false;
